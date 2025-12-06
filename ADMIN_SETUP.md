@@ -1,11 +1,23 @@
 # Admin User Setup Guide
 
+## Quick Start: Create Admin User
+
+See **`CREATE_ADMIN_USER.md`** for detailed step-by-step instructions.
+
+**Quick Method:**
+1. Create auth user in Supabase Dashboard → Authentication → Users
+2. Copy the User ID
+3. Run the SQL from `database/create_admin_user.sql` (replace User ID)
+4. Login at `/admin/login`
+
+---
+
 ## Default Admin Credentials
 
-A default admin user has been seeded into your database:
+To create a default admin user:
 
 **Email:** `admin@legalhub.com`  
-**Password:** You need to create this in Supabase Auth
+**Password:** Create in Supabase Auth (e.g., `Admin@123456`)
 
 ---
 

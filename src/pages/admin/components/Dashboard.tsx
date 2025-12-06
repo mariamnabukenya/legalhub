@@ -6,7 +6,11 @@ export default function Dashboard() {
     totalUsers: 0,
     activeCases: 0,
     totalDownloads: 0,
-    monthlyRevenue: 0
+    monthlyRevenue: 0,
+    usersChange: 0,
+    casesChange: 0,
+    downloadsChange: 0,
+    revenueChange: 0
   });
 
   const [recentCases, setRecentCases] = useState<any[]>([]);
@@ -15,36 +19,73 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchDashboardData();
+    // Refresh data every 30 seconds
+    const interval = setInterval(fetchDashboardData, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      // Fetch total users
+      const now = new Date();
+      const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
+      // Fetch total users (current and last month)
       const { count: usersCount } = await supabase
         .from('profiles')
         .select('*', { count: 'exact', head: true });
 
-      // Fetch active cases
+      const { count: lastMonthUsers } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .lt('created_at', lastMonthStart.toISOString());
+
+      // Fetch active cases (current and last month)
       const { data: casesData, count: casesCount } = await supabase
         .from('cases')
         .select('*', { count: 'exact' })
-        .eq('status', 'Active')
+        .eq('status', 'active')
         .order('created_at', { ascending: false })
         .limit(3);
 
-      // Fetch total downloads
+      const { count: lastMonthCases } = await supabase
+        .from('cases')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'active')
+        .lt('created_at', lastMonthStart.toISOString());
+
+      // Fetch total downloads (current and last month)
       const { count: downloadsCount } = await supabase
         .from('user_purchases')
         .select('*', { count: 'exact', head: true });
 
-      // Fetch monthly revenue
+      const { count: lastMonthDownloads } = await supabase
+        .from('user_purchases')
+        .select('*', { count: 'exact', head: true })
+        .lt('purchased_at', lastMonthStart.toISOString());
+
+      // Fetch monthly revenue (current and last month)
       const { data: paymentsData } = await supabase
         .from('user_purchases')
-        .select('amount')
-        .gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
+        .select('amount_paid')
+        .gte('purchased_at', currentMonthStart.toISOString());
 
-      const revenue = paymentsData?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
+      const { data: lastMonthPayments } = await supabase
+        .from('user_purchases')
+        .select('amount_paid')
+        .gte('purchased_at', lastMonthStart.toISOString())
+        .lt('purchased_at', currentMonthStart.toISOString());
+
+      const revenue = paymentsData?.reduce((sum, p) => sum + (p.amount_paid || 0), 0) || 0;
+      const lastMonthRevenue = lastMonthPayments?.reduce((sum, p) => sum + (p.amount_paid || 0), 0) || 0;
+
+      // Calculate percentage changes
+      const calculateChange = (current: number, previous: number) => {
+        if (previous === 0) return current > 0 ? 100 : 0;
+        return Math.round(((current - previous) / previous) * 100);
+      };
 
       // Fetch recent documents
       const { data: documentsData } = await supabase
@@ -57,7 +98,11 @@ export default function Dashboard() {
         totalUsers: usersCount || 0,
         activeCases: casesCount || 0,
         totalDownloads: downloadsCount || 0,
-        monthlyRevenue: revenue
+        monthlyRevenue: revenue,
+        usersChange: calculateChange(usersCount || 0, lastMonthUsers || 0),
+        casesChange: calculateChange(casesCount || 0, lastMonthCases || 0),
+        downloadsChange: calculateChange(downloadsCount || 0, lastMonthDownloads || 0),
+        revenueChange: calculateChange(revenue, lastMonthRevenue)
       });
 
       setRecentCases(casesData || []);
@@ -81,7 +126,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div>
+    <div className="p-6">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white rounded-xl shadow-sm p-6 border">
@@ -89,8 +134,8 @@ export default function Dashboard() {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Users</p>
               <p className="text-3xl font-bold text-gray-900">{stats.totalUsers.toLocaleString()}</p>
-              <p className="text-sm text-green-600 mt-1">
-                <i className="ri-arrow-up-line"></i> +12% from last month
+              <p className={`text-sm mt-1 ${stats.usersChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <i className={`ri-arrow-${stats.usersChange >= 0 ? 'up' : 'down'}-line`}></i> {Math.abs(stats.usersChange)}% from last month
               </p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -104,8 +149,8 @@ export default function Dashboard() {
             <div>
               <p className="text-sm font-medium text-gray-600">Active Cases</p>
               <p className="text-3xl font-bold text-gray-900">{stats.activeCases}</p>
-              <p className="text-sm text-green-600 mt-1">
-                <i className="ri-arrow-up-line"></i> +8% from last month
+              <p className={`text-sm mt-1 ${stats.casesChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <i className={`ri-arrow-${stats.casesChange >= 0 ? 'up' : 'down'}-line`}></i> {Math.abs(stats.casesChange)}% from last month
               </p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -119,8 +164,8 @@ export default function Dashboard() {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Downloads</p>
               <p className="text-3xl font-bold text-gray-900">{stats.totalDownloads.toLocaleString()}</p>
-              <p className="text-sm text-green-600 mt-1">
-                <i className="ri-arrow-up-line"></i> +15% from last month
+              <p className={`text-sm mt-1 ${stats.downloadsChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <i className={`ri-arrow-${stats.downloadsChange >= 0 ? 'up' : 'down'}-line`}></i> {Math.abs(stats.downloadsChange)}% from last month
               </p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -134,8 +179,8 @@ export default function Dashboard() {
             <div>
               <p className="text-sm font-medium text-gray-600">Monthly Revenue</p>
               <p className="text-3xl font-bold text-gray-900">${stats.monthlyRevenue.toLocaleString()}</p>
-              <p className="text-sm text-green-600 mt-1">
-                <i className="ri-arrow-up-line"></i> +22% from last month
+              <p className={`text-sm mt-1 ${stats.revenueChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <i className={`ri-arrow-${stats.revenueChange >= 0 ? 'up' : 'down'}-line`}></i> {Math.abs(stats.revenueChange)}% from last month
               </p>
             </div>
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -221,7 +266,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-gray-900">${upload.price}</p>
+                      <p className="text-sm font-medium text-gray-900">GHS {upload.price?.toFixed(2) || '0.00'}</p>
                       <p className="text-xs text-gray-500">
                         {new Date(upload.created_at).toLocaleDateString()}
                       </p>

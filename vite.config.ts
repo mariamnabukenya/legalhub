@@ -73,10 +73,16 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src')
-    }
+    },
+    // Prevent Vite from trying to resolve React Native modules
+    conditions: ['import', 'module', 'browser', 'default'],
   },
   server: {
     port: 3000,
     host: '0.0.0.0',
+  },
+  optimizeDeps: {
+    force: true, // Force re-optimization of dependencies
+    exclude: ['react-native', 'react-native-url-polyfill'], // Exclude React Native packages
   }
 })

@@ -45,20 +45,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle(); // Use maybeSingle() instead of single() - returns null if no rows
+      
+      if (error) {
+        console.error('Error fetching profile:', error);
+        // If profile doesn't exist, that's okay - user might not have profile yet
+        if (error.code === 'PGRST116') {
+          // No rows returned - profile doesn't exist
+          console.warn('Profile not found for user:', userId);
+          setProfile(null);
+          return null;
+        }
+        return null;
+      }
+      
+      if (data) {
+        setProfile(data);
+        return data;
+      } else {
+        // Profile doesn't exist
+        setProfile(null);
+        return null;
+      }
+    } catch (err) {
+      console.error('Error in fetchProfile:', err);
+      setProfile(null);
+      return null;
+    }
+  };
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single()
-          .then(({ data }) => {
-            setProfile(data);
-            setLoading(false);
-          });
+        fetchProfile(session.user.id).then(() => {
+          setLoading(false);
+        });
       } else {
         setLoading(false);
       }
@@ -70,12 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single()
-          .then(({ data }) => setProfile(data));
+        fetchProfile(session.user.id);
       } else {
         setProfile(null);
       }

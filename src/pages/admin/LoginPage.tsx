@@ -27,9 +27,17 @@ export default function AdminLoginPage() {
         .from('profiles')
         .select('user_type')
         .eq('id', authData.user.id)
-        .single();
+        .maybeSingle(); // Use maybeSingle() to handle missing profiles
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error('Error fetching profile:', profileError);
+        throw new Error('Failed to verify admin access. Please contact support.');
+      }
+
+      if (!profile) {
+        await supabase.auth.signOut();
+        throw new Error('Profile not found. Please contact support to create your profile.');
+      }
 
       if (profile.user_type !== 'admin') {
         await supabase.auth.signOut();

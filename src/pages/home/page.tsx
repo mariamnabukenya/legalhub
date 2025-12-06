@@ -72,8 +72,8 @@ export default function HomePage() {
               <div className="w-14 h-14 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
                 <i className="ri-file-text-line text-teal-600 text-2xl"></i>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Document Management</h3>
-              <p className="text-gray-600">Upload, organize, and manage legal documents and templates</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Book Posting</h3>
+              <p className="text-gray-600">Post books and documents that will be available for purchase in the mobile app</p>
             </div>
 
             <div className="bg-white p-8 rounded-xl shadow-sm border hover:shadow-md transition-shadow">
@@ -112,8 +112,8 @@ export default function HomePage() {
               <div className="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center mb-4">
                 <i className="ri-secure-payment-line text-red-600 text-2xl"></i>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Payment Oversight</h3>
-              <p className="text-gray-600">Monitor transactions and financial operations</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Content Management</h3>
+              <p className="text-gray-600">Manage book catalog and content that syncs with the mobile app</p>
             </div>
           </div>
         </div>

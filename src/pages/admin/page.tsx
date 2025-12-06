@@ -32,15 +32,22 @@ export default function AdminPage() {
         .from('profiles')
         .select('user_type')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
-      if (error || !profile || profile.user_type !== 'admin') {
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error checking admin access:', error);
+        navigate('/admin/login');
+        return;
+      }
+
+      if (!profile || profile.user_type !== 'admin') {
         navigate('/admin/login');
         return;
       }
 
       setLoading(false);
     } catch (err) {
+      console.error('Unexpected error checking admin access:', err);
       navigate('/admin/login');
     }
   };
@@ -127,8 +134,10 @@ export default function AdminPage() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">
-          {renderContent()}
+        <main className="flex-1 overflow-y-auto bg-gray-50">
+          <div className="p-6">
+            {renderContent()}
+          </div>
         </main>
       </div>
     </div>

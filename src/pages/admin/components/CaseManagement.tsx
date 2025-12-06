@@ -363,18 +363,27 @@ export default function CaseManagement() {
 
       {/* Create Case Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowCreateModal(false);
+            }
+          }}
+        >
+          <div className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between z-10">
               <h2 className="text-lg font-semibold text-gray-900">Create New Case</h2>
               <button 
                 onClick={() => setShowCreateModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Close modal"
               >
                 <i className="ri-close-line text-xl"></i>
               </button>
             </div>
-            <form onSubmit={handleCreateCase} className="space-y-4">
+            <div className="p-4 sm:p-6">
+              <form onSubmit={handleCreateCase} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Case Title</label>
@@ -475,6 +484,7 @@ export default function CaseManagement() {
                 </button>
               </div>
             </form>
+            </div>
           </div>
         </div>
       )}

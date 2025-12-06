@@ -1,13 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
+import { SUPABASE_CONFIG } from '../constants/supabase_config';
 
-const supabaseUrl = import.meta.env.VITE_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY;
+export const supabase = createClient(
+  SUPABASE_CONFIG.url,
+  SUPABASE_CONFIG.anonKey,
+  {
+    auth: {
+      persistSession: true,
+      detectSessionInUrl: false,
+    },
+  },
+);
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export default supabase;
 
 export type Database = {
   public: {

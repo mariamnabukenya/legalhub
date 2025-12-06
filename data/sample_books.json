@@ -1,0 +1,103 @@
+[
+  {
+    "title": "Constitutional Law of Ghana",
+    "author": "Prof. Kwame Asante",
+    "description": "Comprehensive guide to Ghana's constitutional framework and legal system",
+    "category": "Constitutional Law",
+    "price": 150.00,
+    "year": 2023,
+    "file_url": "https://example.com/books/constitutional-law-ghana.pdf",
+    "cover_image_url": "https://example.com/covers/constitutional-law.jpg"
+  },
+  {
+    "title": "Criminal Law and Procedure",
+    "author": "Justice Mensah",
+    "description": "Detailed analysis of criminal law principles and court procedures in Ghana",
+    "category": "Criminal Law",
+    "price": 180.00,
+    "year": 2024,
+    "file_url": "https://example.com/books/criminal-law-procedure.pdf",
+    "cover_image_url": "https://example.com/covers/criminal-law.jpg"
+  },
+  {
+    "title": "Family Law in Practice",
+    "author": "Dr. Ama Osei",
+    "description": "Practical guide to family law matters including marriage, divorce, and child custody",
+    "category": "Family Law",
+    "price": 120.00,
+    "year": 2023,
+    "file_url": "https://example.com/books/family-law-practice.pdf",
+    "cover_image_url": "https://example.com/covers/family-law.jpg"
+  },
+  {
+    "title": "Corporate Governance and Law",
+    "author": "Prof. Kofi Addo",
+    "description": "Essential reading on corporate law, governance structures, and business regulations",
+    "category": "Corporate Law",
+    "price": 200.00,
+    "year": 2024,
+    "file_url": "https://example.com/books/corporate-governance.pdf",
+    "cover_image_url": "https://example.com/covers/corporate-law.jpg"
+  },
+  {
+    "title": "Property Law and Land Rights",
+    "author": "Justice Akosua Boateng",
+    "description": "Comprehensive guide to property ownership, land rights, and real estate law in Ghana",
+    "category": "Property Law",
+    "price": 170.00,
+    "year": 2023,
+    "file_url": "https://example.com/books/property-law-land-rights.pdf",
+    "cover_image_url": "https://example.com/covers/property-law.jpg"
+  },
+  {
+    "title": "Labour and Employment Law",
+    "author": "Dr. Yaw Mensah",
+    "description": "Complete reference on employment contracts, workers' rights, and labour disputes",
+    "category": "Labour Law",
+    "price": 140.00,
+    "year": 2024,
+    "file_url": "https://example.com/books/labour-employment-law.pdf",
+    "cover_image_url": "https://example.com/covers/labour-law.jpg"
+  },
+  {
+    "title": "Commercial Law Essentials",
+    "author": "Prof. Nana Kwame",
+    "description": "Fundamental principles of commercial transactions, contracts, and business law",
+    "category": "Commercial Law",
+    "price": 160.00,
+    "year": 2023,
+    "file_url": "https://example.com/books/commercial-law-essentials.pdf",
+    "cover_image_url": "https://example.com/covers/commercial-law.jpg"
+  },
+  {
+    "title": "Civil Procedure and Litigation",
+    "author": "Justice Efua Asante",
+    "description": "Step-by-step guide to civil court procedures and litigation strategies",
+    "category": "Civil Law",
+    "price": 190.00,
+    "year": 2024,
+    "file_url": "https://example.com/books/civil-procedure-litigation.pdf",
+    "cover_image_url": "https://example.com/covers/civil-law.jpg"
+  },
+  {
+    "title": "Ghana Legal System Overview",
+    "author": "Prof. Kofi Mensah",
+    "description": "Introduction to the Ghanaian legal system, courts structure, and legal profession",
+    "category": "Constitutional Law",
+    "price": 100.00,
+    "year": 2023,
+    "file_url": "https://example.com/books/ghana-legal-system.pdf",
+    "cover_image_url": "https://example.com/covers/legal-system.jpg"
+  },
+  {
+    "title": "Contract Law Principles",
+    "author": "Dr. Ama Serwaa",
+    "description": "In-depth analysis of contract formation, breach, and remedies under Ghanaian law",
+    "category": "Commercial Law",
+    "price": 175.00,
+    "year": 2024,
+    "file_url": "https://example.com/books/contract-law-principles.pdf",
+    "cover_image_url": "https://example.com/covers/contract-law.jpg"
+  }
+]
+
